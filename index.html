@@ -1,13 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simon Swipe - Versão Acessível</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Versão acessível do jogo Simon Swipe para teclado, mouse, toque e leitores de tela.">
+  <meta name="theme-color" content="#14161c">
+  <title>Simon Swipe Acessível</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/strings.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/announcer.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/moves.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/input.js" defer></script>
+  <script src="js/game.js" defer></script>
+  <script src="js/main.js" defer></script>
 </head>
-<body>
-    <h1>Simon Swipe - Versão Acessível</h1>
+<body data-state="off">
+  <a class="skip-link" href="#game">Ir para o jogo</a>
+
+  <header class="top-bar">
+    <h1 class="title">Simon Swipe <span class="title__tag">acessível</span></h1>
+    <nav class="top-bar__actions" aria-label="Opções">
+      <button type="button" id="help-button" class="pill-button" aria-keyshortcuts="H">Ajuda <kbd>H</kbd></button>
+      <button type="button" id="settings-button" class="pill-button" aria-keyshortcuts="O">Configurações <kbd>O</kbd></button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <div id="game" class="game" role="application" tabindex="0"
+         aria-roledescription="jogo"
+         aria-label="Simon Swipe. Use as setas para tocar nas cores."
+         aria-describedby="game-instructions">
+      <div id="unit" class="unit is-off">
+        <svg id="ring" class="ring" viewBox="-100 -100 200 200" focusable="false">
+          <circle class="ring__track" r="99"></circle>
+        </svg>
+        <div class="hub">
+          <span class="hub__logo" aria-hidden="true">SIMON</span>
+          <span class="hub__sub" aria-hidden="true">swipe</span>
+          <button type="button" id="power-button" class="hub__power"
+                  aria-label="Ligar ou desligar" aria-keyshortcuts="P">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M12 3v8" />
+              <path d="M6.3 6.8a8 8 0 1 0 11.4 0" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel" aria-label="Painel do jogo">
+      <p id="status" class="status" aria-hidden="true">Desligado</p>
+
+      <dl class="scoreboard" aria-label="Placar">
+        <div class="scoreboard__item"><dt>Jogo</dt><dd id="score-mode">—</dd></div>
+        <div class="scoreboard__item"><dt>Pontos</dt><dd id="score-points">—</dd></div>
+        <div class="scoreboard__item"><dt>Recorde</dt><dd id="score-best">—</dd></div>
+        <div class="scoreboard__item"><dt>Nível</dt><dd id="score-level">—</dd></div>
+      </dl>
+
+      <div class="modes" role="group" aria-labelledby="modes-title">
+        <h2 id="modes-title" class="panel__title">Jogos</h2>
+        <button type="button" class="mode-button" data-mode="classic" aria-pressed="false">
+          <span class="mode-button__name"></span><span class="mode-button__hint"></span>
+        </button>
+        <button type="button" class="mode-button" data-mode="levels" aria-pressed="false">
+          <span class="mode-button__name"></span><span class="mode-button__hint"></span>
+        </button>
+        <button type="button" class="mode-button" data-mode="extreme" aria-pressed="false">
+          <span class="mode-button__name"></span><span class="mode-button__hint"></span>
+        </button>
+        <button type="button" class="mode-button" data-mode="party" aria-pressed="false">
+          <span class="mode-button__name"></span><span class="mode-button__hint"></span>
+        </button>
+      </div>
+
+      <div id="game-instructions" class="visually-hidden">
+        Cada seta é uma cor do anel: cima verde, direita vermelho, baixo azul, esquerda amarelo.
+        Toque: pressione a seta da cor. Deslize: pressione as setas do caminho em ordem e segure a última.
+        Retorno: vá até o fim do caminho e volte pelas mesmas setas até a cor inicial.
+        Enter começa o jogo selecionado, Esc volta ao menu, I informa o placar, H abre a ajuda.
+      </div>
+    </section>
+  </main>
+
+  <div id="power-overlay" class="power-overlay">
+    <div class="power-overlay__card">
+      <p class="power-overlay__title">Simon Swipe</p>
+      <button type="button" id="power-overlay-button" class="power-overlay__button">
+        Ligar o Simon Swipe
+      </button>
+      <p id="loading" class="power-overlay__loading" role="status"></p>
+      <p class="power-overlay__hint">Use as setas, o mouse ou o toque. Pressione H para ajuda.</p>
+    </div>
+  </div>
+
+  <dialog id="help-dialog" class="dialog" aria-labelledby="help-title">
+    <div class="dialog__body">
+      <h2 id="help-title">Como jogar</h2>
+
+      <h3>O anel</h3>
+      <p>O anel tem quatro cores. Cada uma corresponde a uma seta do teclado, na posição em que está no brinquedo:</p>
+      <ul>
+        <li><kbd>↑</kbd> cima: verde</li>
+        <li><kbd>→</kbd> direita: vermelho</li>
+        <li><kbd>↓</kbd> baixo: azul</li>
+        <li><kbd>←</kbd> esquerda: amarelo</li>
+      </ul>
+      <p>As teclas W, A, S, D e o teclado numérico (8, 4, 2, 6) também funcionam.</p>
+
+      <h3>Escolher um jogo</h3>
+      <p>No menu, pressione a seta de uma cor para selecionar o jogo dela. Pressione a mesma seta de novo, ou Enter, para começar.</p>
+      <ul>
+        <li><strong>Clássico</strong> (cima, verde): só toques. A sequência cresce uma jogada a cada rodada.</li>
+        <li><strong>Níveis</strong> (direita, vermelho): 16 níveis. O progresso fica salvo. Antes de cada nível, Simon toca um bipe para cada número do nível.</li>
+        <li><strong>Extremo</strong> (baixo, azul): toques, deslizes e retornos desde o começo.</li>
+        <li><strong>Festa</strong> (esquerda, amarelo): para vários jogadores. Depois de cada rodada certa toca a música de passar; entregue o aparelho e o próximo jogador toca em qualquer cor (ou pressiona qualquer seta) para continuar.</li>
+      </ul>
+
+      <h3>Jogadas</h3>
+      <ul>
+        <li><strong>Toque</strong>: um som curto. Pressione a seta da cor, ou toque nela.</li>
+        <li><strong>Deslize</strong> (duplo, triplo ou quádruplo): o dedo passa por 2, 3 ou 4 cores vizinhas, em qualquer sentido. No teclado, pressione a seta da cor inicial e depois as próximas em ordem, segurando a última. Exemplo: toque <kbd>↑</kbd> e segure <kbd>←</kbd> é um deslize de cima para a esquerda.</li>
+        <li><strong>Retorno</strong> (deslize com volta): vá até o fim e volte pelo mesmo caminho até a cor inicial. Exemplo de retorno duplo: <kbd>↑</kbd>, <kbd>→</kbd>, segure <kbd>↑</kbd>.</li>
+      </ul>
+      <p>No toque ou mouse, deslize sem levantar o dedo. Se levantar no meio, ainda pode terminar o deslize tocando nas cores que faltam.</p>
+      <p>Cada cor tem seu próprio som, e cada tipo de jogada tem seu próprio padrão de som. O som de um deslize é o da cor onde ele começa.</p>
+
+      <h3>Fim do jogo</h3>
+      <p>Se errar ou demorar demais, toca a buzina. Depois Simon toca sua pontuação: um som de contagem para cada 10 pontos e um bipe para cada ponto restante. Se bater o recorde, toca a música de recorde.</p>
+
+      <h3>Atalhos</h3>
+      <ul>
+        <li><kbd>Enter</kbd> ou <kbd>Espaço</kbd>: começar o jogo selecionado / continuar no modo Festa</li>
+        <li><kbd>Esc</kbd>: interromper o jogo e voltar ao menu</li>
+        <li><kbd>P</kbd>: ligar ou desligar</li>
+        <li><kbd>I</kbd>: ouvir o placar e o estado atual</li>
+        <li><kbd>R</kbd>: repetir o último aviso</li>
+        <li><kbd>+</kbd> e <kbd>-</kbd>: volume</li>
+        <li><kbd>O</kbd>: configurações · <kbd>H</kbd>: esta ajuda</li>
+      </ul>
+      <p>Com leitor de tela (NVDA, JAWS), o jogo entra sozinho no modo de foco quando o anel está focado. Se as setas não responderem, pressione Tab até “Simon Swipe” ou ative o modo de foco (NVDA+Espaço).</p>
+
+      <button type="button" class="pill-button pill-button--primary" data-close-dialog>Fechar</button>
+    </div>
+  </dialog>
+
+  <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
+    <form class="dialog__body" method="dialog">
+      <h2 id="settings-title">Configurações</h2>
+
+      <div class="field">
+        <label for="setting-volume">Volume</label>
+        <input type="range" id="setting-volume" min="0" max="100" step="10">
+      </div>
+
+      <div class="field">
+        <label for="setting-timeout">Tempo para cada jogada</label>
+        <select id="setting-timeout">
+          <option value="5000">5 segundos (como o brinquedo)</option>
+          <option value="10000">10 segundos</option>
+          <option value="20000">20 segundos</option>
+          <option value="0">Sem limite</option>
+        </select>
+      </div>
+
+      <div class="field field--check">
+        <input type="checkbox" id="setting-announce-turn">
+        <label for="setting-announce-turn">Avisar “Sua vez” no leitor de tela</label>
+      </div>
+
+      <div class="field field--check">
+        <input type="checkbox" id="setting-describe">
+        <label for="setting-describe">Descrever a sequência em texto depois de tocar (modo de aprendizado)</label>
+      </div>
+
+      <div class="field field--buttons">
+        <button type="button" id="reset-levels" class="pill-button">Reiniciar níveis</button>
+        <button type="button" id="reset-records" class="pill-button">Apagar recordes</button>
+      </div>
+
+      <button type="submit" class="pill-button pill-button--primary">Fechar</button>
+    </form>
+  </dialog>
+
+  <div id="announcer-polite" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+  <div id="announcer-assertive" class="visually-hidden" aria-live="assertive" aria-atomic="true"></div>
 </body>
 </html>
