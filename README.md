@@ -49,6 +49,15 @@ Nas configurações (tecla O). O leitor de tela descreve cada sequência depois 
 
 Todas as regras e tempos que imitam o brinquedo ficam em [`js/config.js`](js/config.js): posição das cores, cor de cada jogo, pontuação de vitória, níveis, intervalos entre os sons e tempo de resposta.
 
+## Créditos
+
+Os sons vêm da **EG Public Library**, a biblioteca de sons de altíssima qualidade gravada e organizada por **zseli22**. Muito obrigado pelo trabalho de preservação!
+
+- Endereço original: <https://keybase.pub/zseli22/EG_Public_library/>. O keybase.pub foi desligado e o link não funciona mais. Os arquivos foram extraídos com o aplicativo do Keybase para Windows, onde a pasta pública ainda pode ser acessada.
+- Os sons de vermelho, amarelo e verde, dos jogos e gerais foram convertidos de FLAC para OGG com o ffmpeg, sem outras alterações.
+
+Simon e Simon Swipe são marcas da Hasbro. Este é um projeto de fãs, sem fins lucrativos e sem relação com a Hasbro.
+
 ## Estrutura
 
 - `js/config.js`: regras, layout e tempos
