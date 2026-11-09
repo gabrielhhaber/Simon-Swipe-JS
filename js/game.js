@@ -186,7 +186,7 @@
       Object.values(SELECT_SOUNDS).forEach((id) => Audio.stop(id));
       UI.setSelectedMode(mode);
       this.refreshScoreboard();
-      this.say(STRINGS.modeStarting(mode));
+      this.say(STRINGS.modeStarting(mode, Storage.settings.trainingMode));
       try {
         UI.flashAll(Audio.duration(START_SOUNDS[mode]));
         await this.step(token, Audio.play(START_SOUNDS[mode]));
@@ -226,7 +226,7 @@
       }
       const settings = Storage.settings;
       const parts = [];
-      if (settings.describeMoves) {
+      if (settings.trainingMode) {
         parts.push(STRINGS.describePattern(sequence.map((move) => Moves.describe(move))));
       }
       if (settings.announceTurn) parts.push(STRINGS.yourTurn);
@@ -263,6 +263,9 @@
 
     armTurnTimer() {
       this.clearTurnTimer();
+      /* Training mode never times out: the screen reader may still be
+         describing a long pattern. */
+      if (Storage.settings.trainingMode) return;
       const limit = Number(Storage.settings.responseTimeout);
       if (!limit) return;
       this.turnTimer = setTimeout(() => this.endTurn(false, 'timeout'), limit);
@@ -470,7 +473,9 @@
 
     async finishWithScore(token, score, extraMessage) {
       const mode = this.mode;
-      const isRecord = mode !== 'levels' && Storage.submitScore(mode, score);
+      /* Training games have no time limit, so they do not set records. */
+      const isRecord = mode !== 'levels' && !Storage.settings.trainingMode &&
+        Storage.submitScore(mode, score);
       this.say(STRINGS.score(score) + (extraMessage ? ' ' + extraMessage : ''));
       await this.playScore(token, score);
       if (isRecord) {

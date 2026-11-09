@@ -73,8 +73,9 @@
       return modeNames[mode] + ' selecionado. ' + modeDescriptions[mode] +
         ' Pressione ' + direction + ' de novo, ou Enter, para começar.';
     },
-    modeStarting(mode) {
-      return 'Começando ' + modeNames[mode] + '.';
+    modeStarting(mode, training) {
+      return 'Começando ' + modeNames[mode] + '.' +
+        (training ? ' Modo treino: sem limite de tempo.' : '');
     },
     levelAnnounce(level, total) {
       return 'Nível ' + level + ' de ' + total + '.';

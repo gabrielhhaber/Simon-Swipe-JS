@@ -37,6 +37,10 @@ Soltar todas as teclas ou levantar o dedo no meio de um deslize conta como erro,
 
 Quando o jogo acaba (erro, tempo esgotado ou vitória), Simon toca a pontuação: o som de contagem para cada 10 pontos e um bipe para cada ponto restante. Se for recorde, toca a música de recorde.
 
+## Modo treino
+
+Nas configurações (tecla O). O leitor de tela descreve cada sequência depois que ela toca e não há limite de tempo para responder. Partidas de treino não contam para os recordes.
+
 ## Ajustes finos
 
 Todas as regras e tempos que imitam o brinquedo ficam em [`js/config.js`](js/config.js): posição das cores, cor de cada jogo, pontuação de vitória, níveis, intervalos entre os sons e tempo de resposta.

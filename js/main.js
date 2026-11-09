@@ -71,10 +71,12 @@
       Storage.setSetting('announceTurn', announceTurn.checked);
     });
 
-    const describe = $('#setting-describe');
-    describe.checked = Boolean(s.describeMoves);
-    describe.addEventListener('change', () => {
-      Storage.setSetting('describeMoves', describe.checked);
+    const training = $('#setting-training');
+    training.checked = Boolean(s.trainingMode);
+    training.addEventListener('change', () => {
+      Storage.setSetting('trainingMode', training.checked);
+      /* Applies to the current turn right away. */
+      if (Game.state === 'input') Game.armTurnTimer();
     });
 
     const allowLift = $('#setting-allow-lift');

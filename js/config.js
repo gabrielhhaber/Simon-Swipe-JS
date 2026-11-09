@@ -123,10 +123,10 @@
        * classic Simon, the pace speeds up after the 5th, 9th and 13th move.
        */
       patternGaps: [
-        { fromLength: 1, gap: 210 },
-        { fromLength: 6, gap: 160 },
-        { fromLength: 10, gap: 120 },
-        { fromLength: 14, gap: 85 },
+        { fromLength: 1, gap: 150 },
+        { fromLength: 6, gap: 115 },
+        { fromLength: 10, gap: 85 },
+        { fromLength: 14, gap: 60 },
       ],
       /*
        * Time between the start of two level-number ticks. Equal to the
@@ -140,7 +140,7 @@
       /* Pause after the fail buzzer before the score is played back. */
       afterFail: 700,
       /* Time between the start of two point counter ticks (they may overlap). */
-      pointTickInterval: 220,
+      pointTickInterval: 140,
       /* Pitch rise per group of 10 points counted (1 semitone). */
       pointPitchStep: Math.pow(2, 1 / 12),
       /* Highest playback rate reached while counting. */

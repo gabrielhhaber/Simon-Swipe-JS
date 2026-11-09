@@ -131,6 +131,9 @@
       <p>No toque ou mouse, deslize sem levantar o dedo. Soltar todas as teclas ou levantar o dedo antes de terminar o deslize conta como erro. Quem tem dificuldade motora pode desligar essa regra nas configurações.</p>
       <p>Cada cor tem seu próprio som, e cada tipo de jogada tem seu próprio padrão de som. O som de um deslize é o da cor onde ele começa.</p>
 
+      <h3>Modo treino</h3>
+      <p>Ative nas configurações (<kbd>O</kbd>). Depois de cada sequência, o leitor de tela descreve as jogadas, e não há limite de tempo para responder. Partidas de treino não contam para os recordes.</p>
+
       <h3>Fim do jogo</h3>
       <p>Se errar ou demorar demais, toca a buzina. Depois Simon toca sua pontuação: um som de contagem para cada 10 pontos e um bipe para cada ponto restante. Se bater o recorde, toca a música de recorde.</p>
 
@@ -160,7 +163,7 @@
       </div>
 
       <div class="field">
-        <label for="setting-timeout">Tempo para cada jogada</label>
+        <label for="setting-timeout">Tempo para cada jogada (ignorado no modo treino)</label>
         <select id="setting-timeout">
           <option value="5000">5 segundos (como o brinquedo)</option>
           <option value="10000">10 segundos</option>
@@ -182,8 +185,10 @@
       </div>
 
       <div class="field field--check">
-        <input type="checkbox" id="setting-describe">
-        <label for="setting-describe">Descrever a sequência em texto depois de tocar (modo de aprendizado)</label>
+        <input type="checkbox" id="setting-training" aria-describedby="setting-training-hint">
+        <label for="setting-training">Modo treino
+          <span id="setting-training-hint" class="field__hint">O leitor de tela descreve cada sequência depois que ela toca, e não há limite de tempo para responder. Partidas de treino não contam para os recordes.</span>
+        </label>
       </div>
 
       <div class="field field--buttons">

@@ -13,7 +13,8 @@
       volume: 0.8,
       responseTimeout: CONFIG.timing.responseTimeout,
       announceTurn: true,
-      describeMoves: false,
+      /* Training mode: describes each pattern and never times out. */
+      trainingMode: false,
       /* Motor accessibility: allow releasing mid-swipe. Off = toy rules. */
       allowLift: false,
     },
@@ -30,6 +31,12 @@
       const raw = window.localStorage.getItem(CONFIG.storageKey);
       if (!raw) return clone(DEFAULTS);
       const parsed = JSON.parse(raw);
+      /* Older versions called training mode "describeMoves". */
+      if (parsed.settings && parsed.settings.trainingMode === undefined &&
+          parsed.settings.describeMoves !== undefined) {
+        parsed.settings.trainingMode = parsed.settings.describeMoves;
+      }
+      if (parsed.settings) delete parsed.settings.describeMoves;
       return {
         settings: Object.assign(clone(DEFAULTS.settings), parsed.settings),
         highScores: Object.assign(clone(DEFAULTS.highScores), parsed.highScores),
