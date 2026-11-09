@@ -87,25 +87,34 @@
 
     /*
      * Levels: each level is a growing pattern that must reach `length`.
-     * Difficulty grows with longer patterns and new move types.
+     * Gentle curve: every new move type first appears rarely, gets a level
+     * or two to become familiar, and only then the next one is introduced.
+     *
+     *   1-2   taps only
+     *   3-6   double swipes
+     *   7-8   double U-turns
+     *   9-10  triple swipes
+     *   11-12 triple U-turns
+     *   13-14 quad swipes
+     *   15-16 quad U-turns
      */
     levels: [
+      { length: 3, moveWeights: { tap: 1 } },
       { length: 4, moveWeights: { tap: 1 } },
+      { length: 4, moveWeights: { tap: 4, double: 1 } },
       { length: 4, moveWeights: { tap: 3, double: 1 } },
       { length: 5, moveWeights: { tap: 3, double: 2 } },
       { length: 5, moveWeights: { tap: 2, double: 2 } },
-      { length: 6, moveWeights: { tap: 3, double: 2, triple: 1 } },
-      { length: 6, moveWeights: { tap: 2, double: 2, triple: 1 } },
-      { length: 7, moveWeights: { tap: 2, double: 2, triple: 2 } },
-      { length: 7, moveWeights: { tap: 2, double: 2, triple: 2 } },
-      { length: 8, moveWeights: { tap: 3, double: 2, triple: 1, doubleReverse: 1 } },
-      { length: 8, moveWeights: { tap: 2, double: 2, triple: 1, doubleReverse: 2 } },
-      { length: 9, moveWeights: { tap: 2, double: 2, triple: 1, doubleReverse: 1, tripleReverse: 1 } },
-      { length: 9, moveWeights: { tap: 2, double: 1, triple: 1, doubleReverse: 2, tripleReverse: 1 } },
-      { length: 10, moveWeights: { tap: 2, double: 2, triple: 1, doubleReverse: 1, tripleReverse: 1, quad: 1 } },
-      { length: 10, moveWeights: { tap: 2, double: 1, triple: 1, doubleReverse: 1, tripleReverse: 1, quad: 1, quadReverse: 1 } },
-      { length: 11, moveWeights: { tap: 2, double: 1, triple: 1, doubleReverse: 1, tripleReverse: 1, quad: 1, quadReverse: 1 } },
-      { length: 12, moveWeights: { tap: 2, double: 1, triple: 1, doubleReverse: 1, tripleReverse: 1, quad: 1, quadReverse: 1 } },
+      { length: 5, moveWeights: { tap: 4, double: 3, doubleReverse: 1 } },
+      { length: 6, moveWeights: { tap: 3, double: 2, doubleReverse: 2 } },
+      { length: 6, moveWeights: { tap: 4, double: 3, doubleReverse: 2, triple: 1 } },
+      { length: 6, moveWeights: { tap: 3, double: 2, doubleReverse: 2, triple: 2 } },
+      { length: 7, moveWeights: { tap: 4, double: 3, doubleReverse: 2, triple: 2, tripleReverse: 1 } },
+      { length: 7, moveWeights: { tap: 3, double: 2, doubleReverse: 2, triple: 2, tripleReverse: 2 } },
+      { length: 7, moveWeights: { tap: 4, double: 3, doubleReverse: 2, triple: 2, tripleReverse: 1, quad: 1 } },
+      { length: 8, moveWeights: { tap: 3, double: 2, doubleReverse: 2, triple: 2, tripleReverse: 2, quad: 2 } },
+      { length: 8, moveWeights: { tap: 4, double: 3, doubleReverse: 2, triple: 2, tripleReverse: 2, quad: 2, quadReverse: 1 } },
+      { length: 9, moveWeights: { tap: 3, double: 2, doubleReverse: 2, triple: 2, tripleReverse: 2, quad: 2, quadReverse: 2 } },
     ],
 
     /* Timings in milliseconds (estimates, tune against the real toy). */
