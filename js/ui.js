@@ -141,9 +141,15 @@
       }
     },
 
-    /* Runs a light around the ring, used for ticks while counting. */
-    tick(step) {
-      this.flash(step % segments.length, 120);
+    /*
+     * Count tick (level number, score points): a short flash of the whole
+     * ring. It must never light a single segment, or it would look like a
+     * pattern move (a level-1 tick on the top color was read as a green tap).
+     * Kept shorter than the tick interval so consecutive ticks stay apart.
+     */
+    tick() {
+      segments.forEach((_, idx) => this.setLit(idx, true));
+      later(() => this.clearLights(), 70);
     },
 
     clearLights() {

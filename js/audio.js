@@ -119,7 +119,19 @@
       return new Promise((resolve) => {
         const soundId = howl.play();
         howl.loop(Boolean(opts.loop), soundId);
-        howl.rate(opts.rate || 1, soundId);
+        const rate = opts.rate || 1;
+        howl.rate(rate, soundId);
+        if (!howl._webAudio && rate !== 1) {
+          /*
+           * HTML5 audio (the file:// fallback): a rate set while the
+           * browser's play() is still pending is dropped by howler, so it is
+           * applied again once playback starts. The element also keeps the
+           * pitch by default; the score count needs the pitch to rise.
+           */
+          const node = howl._soundById(soundId) && howl._soundById(soundId)._node;
+          if (node && 'preservesPitch' in node) node.preservesPitch = false;
+          howl.once('play', () => howl.rate(rate, soundId), soundId);
+        }
         const entry = { howl, soundId, resolve };
         active.add(entry);
         const finish = () => {

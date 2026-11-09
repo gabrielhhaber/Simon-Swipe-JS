@@ -428,7 +428,7 @@
       for (let i = 1; i <= level; i += 1) {
         const due = startedAt + (i - 1) * T.levelTickInterval;
         await this.step(token, this.wait(Math.max(0, due - Date.now())));
-        UI.tick(i - 1);
+        UI.tick();
         last = Audio.play(i === level ? 'levelTap' : 'levelTapLoop');
       }
       await this.step(token, last);
@@ -517,7 +517,7 @@
       for (let i = 0; i < units; i += 1) {
         const due = startedAt + i * T.pointTickInterval;
         await this.step(token, this.wait(Math.max(0, due - Date.now())));
-        UI.tick(i);
+        UI.tick();
         last = Audio.play('pointCounter', { rate: unitRate });
       }
       await this.step(token, last);
