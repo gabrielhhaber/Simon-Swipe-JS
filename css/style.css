@@ -417,6 +417,15 @@ body:not([data-state="menu"]) .mode-button {
   opacity: 0.55;
   cursor: default;
 }
+.mode-button--learn {
+  --mode-color: var(--text);
+  grid-column: 1 / -1;
+  border-left-style: dashed;
+}
+body[data-state="learn"] .mode-button--learn {
+  opacity: 1;
+  cursor: pointer;
+}
 
 /* ---------- Power overlay ---------- */
 

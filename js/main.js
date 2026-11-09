@@ -115,6 +115,14 @@
     });
   }
 
+  function setupLearnButton() {
+    $('#learn-button').addEventListener('click', () => {
+      if (Game.state !== 'menu' && Game.state !== 'learn') return;
+      Game.toggleLearn();
+      focusGame();
+    });
+  }
+
   function powerOnFromUser() {
     $('#power-overlay').hidden = true;
     Audio.resume().then(() => {
@@ -169,6 +177,9 @@
       case 'repeat':
         Announcer.repeatLast();
         break;
+      case 'learn':
+        Game.toggleLearn();
+        break;
       default:
         break;
     }
@@ -203,6 +214,7 @@
 
     setupDialogs();
     setupModeButtons();
+    setupLearnButton();
     setupPower();
 
     Audio.setVolume(Storage.settings.volume);

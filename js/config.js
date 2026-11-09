@@ -162,6 +162,11 @@
       responseTimeout: 5000,
       /* How long the ring segments stay lit after a player's tap. */
       tapLight: 220,
+      /*
+       * Learn mode: pause without touches that ends a gesture when it cannot
+       * end by lifting (screen reader double taps, "allow lifting" setting).
+       */
+      learnPause: 1000,
     },
 
     storageKey: 'simonSwipe.v1',

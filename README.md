@@ -20,11 +20,11 @@ Depois abra <http://localhost:8080>. Qualquer outro servidor estático (como o L
 | Toque | pressionar a seta da cor | tocar na cor |
 | Deslize | segurar a seta inicial e pressionar as próximas em ordem, sem soltar todas antes do fim (segurar ↑ e pressionar ← = de cima para a esquerda) | deslizar o dedo pelas cores sem levantar |
 | Retorno (U-turn) | ir até o fim e voltar pelas mesmas setas até a cor inicial | deslizar e voltar até a cor inicial |
-
-Soltar todas as teclas ou levantar o dedo no meio de um deslize conta como erro, como no brinquedo. Nas configurações há uma opção de acessibilidade motora que permite soltar e terminar o deslize cor por cor.
 | Escolher jogo | seta da cor do jogo; a mesma seta de novo, ou Enter, começa | tocar na cor duas vezes, ou usar os botões de jogo |
 | Menu / ligar | Esc volta ao menu · P liga e desliga | botão central |
-| Outros | I placar · R repete o aviso · + / - volume · O configurações · H ajuda | |
+| Outros | L aprender comandos · I placar · R repete o aviso · + / - volume · O configurações · H ajuda | |
+
+Soltar todas as teclas ou levantar o dedo no meio de um deslize conta como erro, como no brinquedo. Nas configurações há uma opção de acessibilidade motora que permite soltar e terminar o deslize cor por cor.
 
 ## Jogos
 
@@ -36,6 +36,10 @@ Soltar todas as teclas ou levantar o dedo no meio de um deslize conta como erro,
 | Amarelo (←) | Festa | Vários jogadores. A música de passar toca até o próximo jogador tocar em uma cor. |
 
 Quando o jogo acaba (erro, tempo esgotado ou vitória), Simon toca a pontuação: o som de contagem para cada 10 pontos e um bipe para cada ponto restante. Se for recorde, toca a música de recorde.
+
+## Aprender comandos
+
+No menu, pressione L ou o botão "Aprender comandos". Faça qualquer toque ou deslize: ao soltar, Simon toca o som da jogada e o leitor de tela a descreve. Caminhos que não são jogadas do brinquedo tocam a buzina com a explicação. Esc ou L saem do modo. Com leitor de tela no celular, ou com a opção de soltar no meio do deslize, a jogada termina após 1 segundo sem toques.
 
 ## Modo treino
 

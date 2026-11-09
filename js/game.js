@@ -7,6 +7,7 @@
  *   busy     - Simon is playing sounds; touches are ignored (like the toy)
  *   input    - the player is repeating the pattern
  *   passing  - party mode: waiting for the next player to take the unit
+ *   learn    - free play: any gesture plays its sound and is described
  */
 (function () {
   'use strict';
@@ -73,6 +74,9 @@
     reset() {
       this.token += 1;
       this.clearTurnTimer();
+      clearTimeout(this.gestureTimer);
+      this.gesture = null;
+      UI.setLearning(false);
       if (this.turn) {
         this.turn.resolve({ ok: false, aborted: true });
         this.turn = null;
@@ -204,6 +208,10 @@
     /* Escape: leave the current game and go back to the menu. */
     abortToMenu() {
       if (this.state === 'off' || this.state === 'menu') return;
+      if (this.state === 'learn') {
+        this.stopLearn();
+        return;
+      }
       this.reset();
       this.goMenu(STRINGS.gameAborted + ' ' + this.menuHintText());
     },
@@ -515,12 +523,106 @@
       await this.step(token, last);
     },
 
+    /* ---------- learn mode ---------- */
+
+    /*
+     * Free play to learn the moves: every gesture the player makes is
+     * recognised when it ends, its sound plays and it is described.
+     * A gesture ends when the finger is lifted / every arrow is released,
+     * or, for screen reader double taps and with the "allow lifting"
+     * setting, after a short pause without touches.
+     */
+    startLearn() {
+      if (this.state !== 'menu') return;
+      this.reset();
+      this.mode = null;
+      this.setState('learn');
+      UI.setSelectedMode(null);
+      UI.setLearning(true);
+      UI.setStatus(STRINGS.status.learning);
+      UI.setScoreboard({ mode: 'learn' });
+      UI.flashAll(400);
+      this.say(STRINGS.learnStart);
+    },
+
+    stopLearn() {
+      if (this.state !== 'learn') return;
+      this.reset();
+      UI.setLearning(false);
+      this.goMenu(STRINGS.learnExit + ' ' + this.menuHintText());
+    },
+
+    toggleLearn() {
+      if (this.state === 'learn') this.stopLearn();
+      else this.startLearn();
+    },
+
+    learnUsesPause(source) {
+      return source === 'virtual' || Boolean(Storage.settings.allowLift);
+    },
+
+    learnTouch(index, source, kind) {
+      let gesture = this.gesture;
+      if (gesture && gesture.source !== source) {
+        this.finishGesture();
+        gesture = null;
+      }
+      if (!gesture) {
+        /* Sliding in from outside the ring does not start a gesture. */
+        if (kind === 'enter') return;
+        gesture = this.gesture = { source, path: [] };
+      } else if (kind === 'down' && source === 'pointer') {
+        /* A new finger down always starts a new gesture. */
+        this.finishGesture();
+        gesture = this.gesture = { source, path: [] };
+      }
+      if (gesture.path[gesture.path.length - 1] === index) return;
+      gesture.path.push(index);
+      UI.holdLit(index);
+      clearTimeout(this.gestureTimer);
+      if (this.learnUsesPause(source)) {
+        this.gestureTimer = setTimeout(() => this.finishGesture(), T.learnPause);
+      }
+    },
+
+    learnRelease(source) {
+      const gesture = this.gesture;
+      if (!gesture || gesture.source !== source) return;
+      if (this.learnUsesPause(source)) return;
+      this.finishGesture();
+    },
+
+    finishGesture() {
+      const gesture = this.gesture;
+      clearTimeout(this.gestureTimer);
+      this.gesture = null;
+      if (!gesture || !gesture.path.length) return;
+      if (this.learnSound) Audio.stop(this.learnSound);
+      const result = Moves.classify(gesture.path);
+      const directions = gesture.path.map((index) => Moves.directionName(index));
+      if (!result.move) {
+        this.learnSound = 'fail';
+        Audio.play('fail');
+        this.say(STRINGS.learnInvalid(result.error, directions), true);
+        return;
+      }
+      const move = result.move;
+      const id = Audio.commandId(Moves.color(move.start), move.type);
+      this.learnSound = id;
+      UI.lightPath(move.path, Audio.duration(id));
+      Audio.play(id);
+      this.say(STRINGS.learnMove(Moves.describe(move)));
+    },
+
     /* ---------- input entry points ---------- */
 
     handleTouch(index, source, kind) {
       switch (this.state) {
         case 'menu':
           if (kind === 'down') this.chooseMode(CONFIG.modeByColor[Moves.color(index)]);
+          break;
+        case 'learn':
+          this.learnTouch(index, source, kind);
           break;
         case 'input':
           this.turnTouch(index, source, kind);
@@ -542,6 +644,10 @@
      * always tolerated.
      */
     handleRelease(source) {
+      if (this.state === 'learn') {
+        this.learnRelease(source);
+        return;
+      }
       const turn = this.turn;
       if (this.state !== 'input' || !turn || turn.pathPos === 0) return;
       if (turn.swipeSource !== source) return;
@@ -558,6 +664,7 @@
     statusSummary() {
       const parts = [];
       if (this.state === 'off') return STRINGS.status.off;
+      if (this.state === 'learn') return STRINGS.learnStatus;
       const mode = this.mode || this.selectedMode;
       if (mode) parts.push(STRINGS.modeNames[mode] + '.');
       if (this.mode) parts.push(STRINGS.score(this.score));

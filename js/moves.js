@@ -61,6 +61,28 @@
       return STRINGS.directionNames[CONFIG.ring[index].key];
     },
 
+    /*
+     * Learn mode: turns a free path of touched colors into the move it
+     * forms. Returns { move } on success or { error, path } when the path is
+     * not one of the toy's moves ('jump' = colors that are not neighbours,
+     * 'shape' = neighbours but no matching move, e.g. a half U-turn).
+     */
+    classify(path) {
+      if (path.length === 1) return { move: this.create('tap', path[0], 1) };
+      for (let i = 1; i < path.length; i += 1) {
+        const diff = wrap(path[i] - path[i - 1]);
+        if (diff !== 1 && diff !== RING_SIZE - 1) return { error: 'jump', path };
+      }
+      const direction = wrap(path[1] - path[0]) === 1 ? 1 : -1;
+      const match = Object.keys(CONFIG.moves).find((type) => {
+        const candidate = buildPath(type, path[0], direction);
+        return candidate.length === path.length &&
+          candidate.every((index, i) => index === path[i]);
+      });
+      if (!match) return { error: 'shape', path };
+      return { move: this.create(match, path[0], direction) };
+    },
+
     describe(move) {
       return STRINGS.describeMove(
         move.type,

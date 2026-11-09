@@ -171,6 +171,12 @@
       unitEl.dataset.selectedMode = mode || '';
     },
 
+    setLearning(on) {
+      const button = document.querySelector('#learn-button');
+      if (button) button.setAttribute('aria-pressed', String(Boolean(on)));
+      unitEl.classList.toggle('is-learning', Boolean(on));
+    },
+
     setScoreboard({ mode, score, best, level }) {
       scoreEls.mode.textContent = mode ? STRINGS.modeNames[mode] : '—';
       scoreEls.score.textContent = score == null ? '—' : String(score);

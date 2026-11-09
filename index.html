@@ -77,13 +77,18 @@
         <button type="button" class="mode-button" data-mode="party" aria-pressed="false">
           <span class="mode-button__name"></span><span class="mode-button__hint"></span>
         </button>
+        <button type="button" id="learn-button" class="mode-button mode-button--learn"
+                aria-pressed="false" aria-keyshortcuts="L" aria-describedby="learn-button-hint">
+          <span class="mode-button__name">Aprender comandos</span>
+          <span id="learn-button-hint" class="mode-button__hint">Tecla L · faça qualquer jogada e ouça o som dela</span>
+        </button>
       </div>
 
       <div id="game-instructions" class="visually-hidden">
         Cada seta é uma cor do anel: cima verde, direita vermelho, baixo azul, esquerda amarelo.
         Toque: pressione a seta da cor. Deslize: segure a seta da cor inicial e pressione as próximas em ordem, sem soltar todas as teclas antes de terminar.
         Retorno: vá até o fim do caminho e volte pelas mesmas setas até a cor inicial.
-        Enter começa o jogo selecionado, Esc volta ao menu, I informa o placar, H abre a ajuda.
+        Enter começa o jogo selecionado, Esc volta ao menu, L abre o modo aprender comandos, I informa o placar, H abre a ajuda.
       </div>
     </section>
   </main>
@@ -131,6 +136,10 @@
       <p>No toque ou mouse, deslize sem levantar o dedo. Soltar todas as teclas ou levantar o dedo antes de terminar o deslize conta como erro. Quem tem dificuldade motora pode desligar essa regra nas configurações.</p>
       <p>Cada cor tem seu próprio som, e cada tipo de jogada tem seu próprio padrão de som. O som de um deslize é o da cor onde ele começa.</p>
 
+      <h3>Aprender comandos</h3>
+      <p>No menu, pressione <kbd>L</kbd> ou o botão “Aprender comandos”. Faça qualquer toque ou deslize, com as setas, o mouse ou o dedo: quando você soltar, Simon toca o som daquela jogada e o leitor de tela descreve qual foi, por exemplo “Deslize duplo: cima, direita”. Se o caminho não for uma jogada do brinquedo, toca a buzina e o motivo é explicado. Nada é pontuado e não há limite de tempo. <kbd>Esc</kbd> (ou <kbd>L</kbd> de novo) sai do modo.</p>
+      <p>Com leitor de tela no celular, ou com a opção de soltar no meio do deslize ligada, a jogada termina depois de uma pausa de um segundo sem tocar em nenhuma cor.</p>
+
       <h3>Modo treino</h3>
       <p>Ative nas configurações (<kbd>O</kbd>). Depois de cada sequência, o leitor de tela descreve as jogadas, e não há limite de tempo para responder. Partidas de treino não contam para os recordes.</p>
 
@@ -141,6 +150,7 @@
       <ul>
         <li><kbd>Enter</kbd> ou <kbd>Espaço</kbd>: começar o jogo selecionado / continuar no modo Festa</li>
         <li><kbd>Esc</kbd>: interromper o jogo e voltar ao menu</li>
+        <li><kbd>L</kbd>: entrar ou sair do modo aprender comandos</li>
         <li><kbd>P</kbd>: ligar ou desligar</li>
         <li><kbd>I</kbd>: ouvir o placar e o estado atual</li>
         <li><kbd>R</kbd>: repetir o último aviso</li>

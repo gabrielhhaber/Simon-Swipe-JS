@@ -45,6 +45,7 @@
     NumpadSubtract: 'volumeDown',
     KeyI: 'status',
     KeyR: 'repeat',
+    KeyL: 'learn',
   };
 
   /* Ring keys currently held down. */

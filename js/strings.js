@@ -25,6 +25,7 @@
     levels: 'Níveis',
     extreme: 'Extremo',
     party: 'Festa',
+    learn: 'Aprender',
   };
 
   const modeDescriptions = {
@@ -119,6 +120,21 @@
     describePattern(descriptions) {
       return 'Sequência: ' + descriptions.join('; ') + '.';
     },
+    learnStart: 'Modo aprender. Faça qualquer toque ou deslize: quando soltar, ' +
+      'Simon toca o som da jogada e ela é descrita. Esc sai do modo.',
+    learnExit: 'Saindo do modo aprender.',
+    learnStatus: 'Modo aprender. Faça um toque ou deslize para ouvir o som. Esc sai do modo.',
+    learnMove(description) {
+      return description.charAt(0).toUpperCase() + description.slice(1) + '.';
+    },
+    learnInvalid(error, directions) {
+      const path = directions.join(', ');
+      if (error === 'jump') {
+        return 'Jogada inválida: ' + path + '. O deslize só passa por cores vizinhas, sem pular nenhuma.';
+      }
+      return 'Jogada inválida: ' + path + '. Um deslize vai em um só sentido por 2, 3 ou 4 cores, ' +
+        'ou vai até o fim e volta pelo mesmo caminho até a cor inicial.';
+    },
     soundsLoading: 'Carregando sons…',
     soundsError: 'Alguns sons não carregaram. Abra o jogo por um servidor local (veja o README).',
     levelsReset: 'Progresso dos níveis reiniciado. Você volta ao nível 1.',
@@ -134,6 +150,7 @@
       playing: 'Sua vez',
       passing: 'Passe o aparelho',
       result: 'Fim de jogo',
+      learning: 'Modo aprender — faça uma jogada (Esc sai)',
     },
   };
 })();
