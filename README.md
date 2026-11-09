@@ -18,8 +18,10 @@ Depois abra <http://localhost:8080>. Qualquer outro servidor estático (como o L
 | --- | --- | --- |
 | Cores do anel | ↑ verde · → vermelho · ↓ azul · ← amarelo (também WASD e o teclado numérico 8/6/2/4) | tocar ou clicar na cor |
 | Toque | pressionar a seta da cor | tocar na cor |
-| Deslize | pressionar as setas do caminho em ordem, segurando a última (↑ e depois segurar ← = de cima para a esquerda) | deslizar o dedo pelas cores |
-| Retorno (U-turn) | ir até o fim e voltar pelas mesmas setas (↑ → segurar ↑) | deslizar e voltar até a cor inicial |
+| Deslize | segurar a seta inicial e pressionar as próximas em ordem, sem soltar todas antes do fim (segurar ↑ e pressionar ← = de cima para a esquerda) | deslizar o dedo pelas cores sem levantar |
+| Retorno (U-turn) | ir até o fim e voltar pelas mesmas setas até a cor inicial | deslizar e voltar até a cor inicial |
+
+Soltar todas as teclas ou levantar o dedo no meio de um deslize conta como erro, como no brinquedo. Nas configurações há uma opção de acessibilidade motora que permite soltar e terminar o deslize cor por cor.
 | Escolher jogo | seta da cor do jogo; a mesma seta de novo, ou Enter, começa | tocar na cor duas vezes, ou usar os botões de jogo |
 | Menu / ligar | Esc volta ao menu · P liga e desliga | botão central |
 | Outros | I placar · R repete o aviso · + / - volume · O configurações · H ajuda | |

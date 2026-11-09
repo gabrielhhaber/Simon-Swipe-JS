@@ -112,26 +112,39 @@
     timing: {
       /* Silence between the mode "start" jingle and the first pattern. */
       afterModeStart: 700,
+      /* Levels: silence between "Levels start" and the level-number ticks. */
+      levelsStartToCount: 300,
       /* Silence between the end of the player's turn and the next pattern. */
       beforePattern: 800,
+      /* Levels: silence between the level-number ticks and the first pattern. */
+      afterLevelCount: 400,
       /*
        * Gap between two moves while Simon plays the pattern. Like the
        * classic Simon, the pace speeds up after the 5th, 9th and 13th move.
        */
       patternGaps: [
-        { fromLength: 1, gap: 420 },
-        { fromLength: 6, gap: 320 },
-        { fromLength: 10, gap: 240 },
-        { fromLength: 14, gap: 170 },
+        { fromLength: 1, gap: 210 },
+        { fromLength: 6, gap: 160 },
+        { fromLength: 10, gap: 120 },
+        { fromLength: 14, gap: 85 },
       ],
-      /* Gap between the level-number ticks played before a level. */
-      levelTickGap: 90,
+      /*
+       * Time between the start of two level-number ticks. Equal to the
+       * length of "Level tap loopable" so the ticks chain seamlessly.
+       */
+      levelTickInterval: 120,
+      /* Levels: from the player's last correct touch to the "Level up" sound. */
+      beforeLevelUp: 700,
       /* Pause after "Level up" before the level number is tapped out. */
-      afterLevelUp: 500,
+      afterLevelUp: 250,
       /* Pause after the fail buzzer before the score is played back. */
       afterFail: 700,
-      /* Pause between point counter ticks during score playback. */
-      pointTickGap: 80,
+      /* Time between the start of two point counter ticks (they may overlap). */
+      pointTickInterval: 220,
+      /* Pitch rise per group of 10 points counted (1 semitone). */
+      pointPitchStep: Math.pow(2, 1 / 12),
+      /* Highest playback rate reached while counting. */
+      pointPitchMax: 2,
       /* Pause after the score playback before returning to the menu. */
       afterScore: 600,
       /* Delay before "Pass it" music in party mode. */

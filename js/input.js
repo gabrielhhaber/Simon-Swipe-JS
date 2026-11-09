@@ -9,9 +9,10 @@
  *   release(source) -> the finger/mouse was lifted
  *   command(name)   -> non-color actions (enter, escape, power, help, ...)
  *
- * Keyboard swipes: press the starting arrow, then the next arrows of the
- * path in order, holding the last one (e.g. tap Up then hold Left = swipe
- * from the top towards the left). Each key press is one step on the ring.
+ * Keyboard swipes: hold the starting arrow and press the next arrows of the
+ * path in order, always keeping at least one of them held (e.g. hold Up,
+ * press Left = swipe from the top towards the left). Each key press is one
+ * step on the ring; releasing every key mid-swipe is like lifting a finger.
  */
 (function () {
   'use strict';
@@ -46,6 +47,9 @@
     KeyR: 'repeat',
   };
 
+  /* Ring keys currently held down. */
+  const heldKeys = new Set();
+
   function isTypingTarget(target) {
     if (!target || !target.closest) return false;
     if (target.closest('dialog[open]')) return true;
@@ -73,6 +77,7 @@
         if (index != null) {
           event.preventDefault();
           if (event.repeat) return;
+          heldKeys.add(event.code || event.key);
           this.handlers.touch(index, 'keyboard', 'down');
           return;
         }
@@ -87,10 +92,19 @@
         this.handlers.command(command);
       });
 
+      /*
+       * A keyboard swipe counts as "finger lifted" only when no ring key is
+       * held anymore, so pressing the next arrow before releasing the
+       * previous one keeps the swipe going.
+       */
       document.addEventListener('keyup', (event) => {
-        if (keyToIndex[event.code] != null || keyToIndex[event.key] != null) {
-          this.handlers.release('keyboard');
-        }
+        if (!heldKeys.delete(event.code || event.key)) return;
+        if (heldKeys.size === 0) this.handlers.release('keyboard');
+      });
+      window.addEventListener('blur', () => {
+        if (heldKeys.size === 0) return;
+        heldKeys.clear();
+        this.handlers.release('keyboard');
       });
     },
 

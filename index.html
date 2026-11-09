@@ -81,7 +81,7 @@
 
       <div id="game-instructions" class="visually-hidden">
         Cada seta é uma cor do anel: cima verde, direita vermelho, baixo azul, esquerda amarelo.
-        Toque: pressione a seta da cor. Deslize: pressione as setas do caminho em ordem e segure a última.
+        Toque: pressione a seta da cor. Deslize: segure a seta da cor inicial e pressione as próximas em ordem, sem soltar todas as teclas antes de terminar.
         Retorno: vá até o fim do caminho e volte pelas mesmas setas até a cor inicial.
         Enter começa o jogo selecionado, Esc volta ao menu, I informa o placar, H abre a ajuda.
       </div>
@@ -125,10 +125,10 @@
       <h3>Jogadas</h3>
       <ul>
         <li><strong>Toque</strong>: um som curto. Pressione a seta da cor, ou toque nela.</li>
-        <li><strong>Deslize</strong> (duplo, triplo ou quádruplo): o dedo passa por 2, 3 ou 4 cores vizinhas, em qualquer sentido. No teclado, pressione a seta da cor inicial e depois as próximas em ordem, segurando a última. Exemplo: toque <kbd>↑</kbd> e segure <kbd>←</kbd> é um deslize de cima para a esquerda.</li>
-        <li><strong>Retorno</strong> (deslize com volta): vá até o fim e volte pelo mesmo caminho até a cor inicial. Exemplo de retorno duplo: <kbd>↑</kbd>, <kbd>→</kbd>, segure <kbd>↑</kbd>.</li>
+        <li><strong>Deslize</strong> (duplo, triplo ou quádruplo): o dedo passa por 2, 3 ou 4 cores vizinhas, em qualquer sentido. No teclado, segure a seta da cor inicial e pressione as próximas em ordem. Sempre mantenha pelo menos uma seta pressionada até o fim. Exemplo: segure <kbd>↑</kbd> e pressione <kbd>←</kbd> é um deslize de cima para a esquerda.</li>
+        <li><strong>Retorno</strong> (deslize com volta): vá até o fim e volte pelo mesmo caminho até a cor inicial. Exemplo de retorno duplo: segure <kbd>↑</kbd>, pressione <kbd>→</kbd>, solte <kbd>↑</kbd> e pressione <kbd>↑</kbd> de novo, ainda segurando <kbd>→</kbd>.</li>
       </ul>
-      <p>No toque ou mouse, deslize sem levantar o dedo. Se levantar no meio, ainda pode terminar o deslize tocando nas cores que faltam.</p>
+      <p>No toque ou mouse, deslize sem levantar o dedo. Soltar todas as teclas ou levantar o dedo antes de terminar o deslize conta como erro. Quem tem dificuldade motora pode desligar essa regra nas configurações.</p>
       <p>Cada cor tem seu próprio som, e cada tipo de jogada tem seu próprio padrão de som. O som de um deslize é o da cor onde ele começa.</p>
 
       <h3>Fim do jogo</h3>
@@ -167,6 +167,13 @@
           <option value="20000">20 segundos</option>
           <option value="0">Sem limite</option>
         </select>
+      </div>
+
+      <div class="field field--check">
+        <input type="checkbox" id="setting-allow-lift" aria-describedby="setting-allow-lift-hint">
+        <label for="setting-allow-lift">Permitir soltar a tecla ou levantar o dedo no meio de um deslize
+          <span id="setting-allow-lift-hint" class="field__hint">Para quem tem dificuldade motora. Desligado, soltar antes de terminar conta como erro, como no brinquedo.</span>
+        </label>
       </div>
 
       <div class="field field--check">

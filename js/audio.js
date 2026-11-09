@@ -119,6 +119,7 @@
       return new Promise((resolve) => {
         const soundId = howl.play();
         howl.loop(Boolean(opts.loop), soundId);
+        howl.rate(opts.rate || 1, soundId);
         const entry = { howl, soundId, resolve };
         active.add(entry);
         const finish = () => {
@@ -138,8 +139,8 @@
     },
 
     /* Fire-and-forget playback that does not need to be awaited. */
-    fire(id) {
-      this.play(id);
+    fire(id, options) {
+      this.play(id, options);
     },
 
     stop(id) {

@@ -14,6 +14,8 @@
       responseTimeout: CONFIG.timing.responseTimeout,
       announceTurn: true,
       describeMoves: false,
+      /* Motor accessibility: allow releasing mid-swipe. Off = toy rules. */
+      allowLift: false,
     },
     highScores: { classic: 0, extreme: 0, party: 0, levels: 0 },
     level: 1,

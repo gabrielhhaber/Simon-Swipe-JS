@@ -190,7 +190,10 @@
       try {
         UI.flashAll(Audio.duration(START_SOUNDS[mode]));
         await this.step(token, Audio.play(START_SOUNDS[mode]));
-        await this.step(token, this.wait(T.afterModeStart));
+        await this.step(
+          token,
+          this.wait(mode === 'levels' ? T.levelsStartToCount : T.afterModeStart)
+        );
         if (mode === 'levels') await this.runLevels(token);
         else await this.runSequenceGame(token, mode);
       } catch (err) {
@@ -239,20 +242,23 @@
           sequence,
           index: 0,
           pathPos: 0,
+          swipeSource: null,
           lastSound: Promise.resolve(),
           resolve: (result) => resolve(result),
         };
         this.setState('input');
         UI.setStatus(STRINGS.status.playing);
         this.armTurnTimer();
-      }).then(async (result) => {
-        if (result.ok && this.turn === null && token === this.token) {
-          /* Let the final move's sound finish before Simon continues. */
-          await result.lastSound;
-        }
+      }).then((result) => {
         if (token !== this.token) throw ABORT;
         return result;
       });
+    },
+
+    /* After a correct turn: let the final move's sound finish, then pause. */
+    async afterCorrectTurn(token, result) {
+      await this.step(token, result.lastSound);
+      await this.step(token, this.wait(T.beforePattern));
     },
 
     armTurnTimer() {
@@ -273,7 +279,7 @@
       this.clearTurnTimer();
       this.turn = null;
       this.setState('busy');
-      turn.resolve({ ok, reason, lastSound: turn.lastSound });
+      turn.resolve({ ok, reason, lastSound: turn.lastSound, completedAt: Date.now() });
     },
 
     turnTouch(index, source, kind) {
@@ -294,6 +300,7 @@
           return;
         }
         turn.pathPos = 1;
+        turn.swipeSource = source;
         UI.holdLit(index);
         this.armTurnTimer();
         return;
@@ -320,6 +327,7 @@
     completeMove() {
       const turn = this.turn;
       turn.pathPos = 0;
+      turn.swipeSource = null;
       turn.index += 1;
       if (turn.index >= turn.sequence.length) {
         this.endTurn(true);
@@ -333,11 +341,8 @@
     async runSequenceGame(token, mode) {
       const rules = CONFIG.modes[mode];
       const sequence = [];
-      let first = true;
       for (;;) {
         sequence.push(Moves.random(rules.moveWeights));
-        if (!first) await this.step(token, this.wait(T.beforePattern));
-        first = false;
         await this.playPattern(token, sequence);
         const result = await this.playerTurn(token, sequence);
         if (!result.ok) {
@@ -347,10 +352,15 @@
         this.score = sequence.length;
         this.refreshScoreboard();
         if (sequence.length >= rules.winAt) {
+          await this.step(token, result.lastSound);
           await this.gameWon(token, this.score, STRINGS.win);
           return;
         }
-        if (mode === 'party') await this.passIt(token);
+        if (mode === 'party') {
+          await this.step(token, result.lastSound);
+          await this.passIt(token);
+        }
+        await this.afterCorrectTurn(token, result);
       }
     },
 
@@ -361,13 +371,12 @@
       for (;;) {
         const rules = CONFIG.levels[level - 1];
         const sequence = [];
-        let first = true;
+        let result = null;
         while (sequence.length < rules.length) {
+          if (result) await this.afterCorrectTurn(token, result);
           sequence.push(Moves.random(rules.moveWeights));
-          if (!first) await this.step(token, this.wait(T.beforePattern));
-          first = false;
           await this.playPattern(token, sequence);
-          const result = await this.playerTurn(token, sequence);
+          result = await this.playerTurn(token, sequence);
           if (!result.ok) {
             await this.gameOver(token, result.reason, this.score, STRINGS.stoppedAtLevel(level));
             return;
@@ -379,13 +388,16 @@
         Storage.submitScore('levels', level);
         if (level >= total) {
           Storage.level = 1;
+          await this.step(token, result.lastSound);
           await this.gameWon(token, this.score, STRINGS.levelsWin);
           return;
         }
         level += 1;
         Storage.level = level;
         this.refreshScoreboard();
-        await this.step(token, this.wait(T.beforePattern));
+        /* "Level up" starts a fixed time after the last correct touch. */
+        const levelUpAt = result.completedAt + T.beforeLevelUp;
+        await this.step(token, this.wait(Math.max(0, levelUpAt - Date.now())));
         this.say(STRINGS.levelUp(level));
         UI.flashAll(Audio.duration('levelUp'));
         await this.step(token, Audio.play('levelUp'));
@@ -399,13 +411,17 @@
       this.setState('busy');
       if (!silentAnnounce) this.say(STRINGS.levelAnnounce(level, total));
       UI.setStatus(STRINGS.levelAnnounce(level, total));
+      /* Ticks are scheduled on a fixed clock so they chain without gaps. */
+      const startedAt = Date.now();
+      let last = Promise.resolve();
       for (let i = 1; i <= level; i += 1) {
+        const due = startedAt + (i - 1) * T.levelTickInterval;
+        await this.step(token, this.wait(Math.max(0, due - Date.now())));
         UI.tick(i - 1);
-        const id = i === level ? 'levelTap' : 'levelTapLoop';
-        await this.step(token, Audio.play(id));
-        if (i < level) await this.step(token, this.wait(T.levelTickGap));
+        last = Audio.play(i === level ? 'levelTap' : 'levelTapLoop');
       }
-      await this.step(token, this.wait(T.beforePattern));
+      await this.step(token, last);
+      await this.step(token, this.wait(T.afterLevelCount));
     },
 
     /* Party mode: music plays until the next player touches the unit. */
@@ -434,7 +450,8 @@
       this.setState('busy');
       UI.setStatus(STRINGS.status.result);
       Audio.stop('passIt');
-      this.say(reason === 'timeout' ? STRINGS.timeout : STRINGS.failed, true);
+      const reasons = { timeout: STRINGS.timeout, released: STRINGS.released };
+      this.say(reasons[reason] || STRINGS.failed, true);
       UI.flashAll(Audio.duration('fail'));
       await this.step(token, Audio.play('fail'));
       await this.step(token, this.wait(T.afterFail));
@@ -466,22 +483,31 @@
       this.goMenu(STRINGS.backToMenu);
     },
 
-    /* Score playback: "Score", then one count per ten, then one tick per unit. */
+    /*
+     * Score playback: "Score", then one count per ten (each ten one step
+     * higher in pitch), then one tick per remaining point at the pitch
+     * reached so far.
+     */
     async playScore(token, score) {
       await this.step(token, Audio.play('score'));
       const tens = Math.floor(score / 10);
       const units = score % 10;
-      let tick = 0;
+      const rateFor = (step) => Math.min(T.pointPitchMax, Math.pow(T.pointPitchStep, step));
       for (let i = 0; i < tens; i += 1) {
-        UI.flashAll(Audio.duration('countTen'));
-        await this.step(token, Audio.play('countTen'));
+        const rate = rateFor(i);
+        UI.flashAll(Audio.duration('countTen') / rate);
+        await this.step(token, Audio.play('countTen', { rate }));
       }
+      const unitRate = rateFor(tens);
+      const startedAt = Date.now();
+      let last = Promise.resolve();
       for (let i = 0; i < units; i += 1) {
-        UI.tick(tick);
-        tick += 1;
-        await this.step(token, Audio.play('pointCounter'));
-        await this.step(token, this.wait(T.pointTickGap));
+        const due = startedAt + i * T.pointTickInterval;
+        await this.step(token, this.wait(Math.max(0, due - Date.now())));
+        UI.tick(i);
+        last = Audio.play('pointCounter', { rate: unitRate });
       }
+      await this.step(token, last);
     },
 
     /* ---------- input entry points ---------- */
@@ -503,10 +529,19 @@
       }
     },
 
-    handleRelease() {
-      /* Lifting the finger mid-swipe is tolerated: the swipe can be finished
-         by touching the remaining colors, which also keeps it playable with
-         screen readers that split gestures into separate taps. */
+    /*
+     * Lifting the finger (or releasing every arrow) before a swipe is
+     * complete is a mistake, like on the toy. The motor accessibility
+     * setting tolerates it so the swipe can be finished color by color.
+     * Screen reader double taps ('virtual') can never hold, so they are
+     * always tolerated.
+     */
+    handleRelease(source) {
+      const turn = this.turn;
+      if (this.state !== 'input' || !turn || turn.pathPos === 0) return;
+      if (turn.swipeSource !== source) return;
+      if (Storage.settings.allowLift) return;
+      this.endTurn(false, 'released');
     },
 
     handleEnter() {

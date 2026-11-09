@@ -514,6 +514,12 @@ body:not([data-state="menu"]) .mode-button {
 .field--check label {
   font-weight: 500;
 }
+.field__hint {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
 .field--check input {
   width: 1.5rem;
   height: 1.5rem;

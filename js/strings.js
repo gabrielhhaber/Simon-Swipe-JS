@@ -89,6 +89,7 @@
     passIt: 'Passe para o próximo jogador. Toque em qualquer cor ou pressione qualquer seta quando estiver pronto.',
     failed: 'Errou!',
     timeout: 'Tempo esgotado!',
+    released: 'Soltou antes de terminar o deslize!',
     score(points) {
       return 'Pontuação: ' + points + ' ' + plural(points, 'ponto', 'pontos') + '.';
     },

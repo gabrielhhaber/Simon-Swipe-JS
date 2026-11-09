@@ -77,6 +77,12 @@
       Storage.setSetting('describeMoves', describe.checked);
     });
 
+    const allowLift = $('#setting-allow-lift');
+    allowLift.checked = Boolean(s.allowLift);
+    allowLift.addEventListener('change', () => {
+      Storage.setSetting('allowLift', allowLift.checked);
+    });
+
     $('#reset-levels').addEventListener('click', () => {
       Storage.level = 1;
       Game.refreshScoreboard();
