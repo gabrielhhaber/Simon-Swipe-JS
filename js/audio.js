@@ -106,8 +106,9 @@
   const CONTOUR_GLIDE = 0.05;
 
   /*
-   * Direction cue for swipes. `contour` = { pitch: [semitones], pan: [-1..1] }
-   * with one entry per color of the path. The sound is split into equal
+   * Direction cue for moves. `contour` = { pitch: [semitones], pan: [-1..1] }
+   * with one entry per color of the path (a tap has a single entry: only
+   * its stereo position). The sound is split into equal
    * parts of the file, one per color, each played at its own pitch and
    * stereo position, with a short slide between them. Higher pitch plays
    * faster, so the part boundaries are placed in real time accordingly and
@@ -117,7 +118,7 @@
   function applyContour(howl, soundId, baseRate, contour) {
     const sound = howl._soundById(soundId);
     if (!sound) return [];
-    const hasContour = contour && contour.pitch && contour.pitch.length > 1;
+    const hasContour = contour && contour.pitch && contour.pitch.length > 0;
 
     /* Pooled sounds keep their panner: re-center it for plain playback. */
     if (!hasContour) {

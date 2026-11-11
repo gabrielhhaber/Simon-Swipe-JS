@@ -86,15 +86,16 @@
     /*
      * Direction cue for a move's sound: one pitch and stereo position per
      * color of the path, from where that color sits on the ring (index 0 at
-     * the top, then clockwise). Taps have no direction, so no cue.
+     * the top, then clockwise). Taps only get the stereo position, so left
+     * and right taps come from their side and the pitch stays untouched.
      */
     cue(move) {
-      if (move.path.length < 2) return null;
       const { semitones, pan } = CONFIG.directionCue;
       const round = (value) => Math.round(value * 1000) / 1000;
       const angle = (index) => (index / RING_SIZE) * 2 * Math.PI;
+      const isTap = move.path.length < 2;
       return {
-        pitch: move.path.map((index) => round(Math.cos(angle(index)) * semitones)),
+        pitch: move.path.map((index) => (isTap ? 0 : round(Math.cos(angle(index)) * semitones))),
         pan: move.path.map((index) => round(Math.sin(angle(index)) * pan)),
       };
     },

@@ -174,7 +174,8 @@
      * The same sound file is bent along the path so that, for example,
      * left-up and left-down no longer sound the same: each color touched
      * moves the pitch by its height on the ring (top higher, bottom lower)
-     * and the stereo position by its side (left / right).
+     * and the stereo position by its side (left / right). Taps on the left
+     * and right colors are panned to their side too (no pitch change).
      */
     directionCue: {
       /* Pitch of the top color; the bottom one gets the opposite. */

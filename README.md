@@ -53,7 +53,7 @@ Nas configurações (tecla O). O leitor de tela descreve cada sequência depois 
 
 ## Sentido dos deslizes pelo som
 
-No brinquedo, um deslize soa igual nos dois sentidos (esquerda, cima e esquerda, baixo, por exemplo), então só dá para diferenciá-los olhando. Para jogar só pelo som, o som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Os arquivos de som são os mesmos; o efeito é aplicado na hora. A opção fica nas configurações (ligada por padrão) e a intensidade em `directionCue`, no [`js/config.js`](js/config.js).
+No brinquedo, um deslize soa igual nos dois sentidos (esquerda, cima e esquerda, baixo, por exemplo), então só dá para diferenciá-los olhando. Para jogar só pelo som, o som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Os toques na esquerda e na direita também saem do lado da cor. Os arquivos de som são os mesmos; o efeito é aplicado na hora. A opção fica nas configurações (ligada por padrão) e a intensidade em `directionCue`, no [`js/config.js`](js/config.js).
 
 ## Ajustes finos
 
