@@ -218,10 +218,17 @@
 
     /* ---------- pattern playback ---------- */
 
+    /* Sound of a move, with the direction cue when the setting is on. */
+    playMoveSound(move) {
+      const id = Audio.commandId(Moves.color(move.start), move.type);
+      const contour = Storage.settings.directionCue ? Moves.cue(move) : null;
+      return Audio.play(id, { contour });
+    },
+
     async playMove(token, move) {
       const id = Audio.commandId(Moves.color(move.start), move.type);
       UI.lightPath(move.path, Audio.duration(id));
-      await this.step(token, Audio.play(id));
+      await this.step(token, this.playMoveSound(move));
     },
 
     async playPattern(token, sequence) {
@@ -328,7 +335,7 @@
       if (turn.pathPos === move.path.length) {
         const id = Audio.commandId(Moves.color(move.start), move.type);
         UI.lightPath(move.path, Audio.duration(id));
-        turn.lastSound = Audio.play(id);
+        turn.lastSound = this.playMoveSound(move);
         this.completeMove();
       } else {
         this.armTurnTimer();
@@ -610,7 +617,7 @@
       const id = Audio.commandId(Moves.color(move.start), move.type);
       this.learnSound = id;
       UI.lightPath(move.path, Audio.duration(id));
-      Audio.play(id);
+      this.playMoveSound(move);
       this.say(STRINGS.learnMove(Moves.describe(move)));
     },
 

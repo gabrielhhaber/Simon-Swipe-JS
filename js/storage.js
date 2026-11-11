@@ -17,6 +17,8 @@
       trainingMode: false,
       /* Motor accessibility: allow releasing mid-swipe. Off = toy rules. */
       allowLift: false,
+      /* Bends swipe sounds so their direction can be heard. Off = toy sounds. */
+      directionCue: true,
     },
     highScores: { classic: 0, extreme: 0, party: 0, levels: 0 },
     level: 1,

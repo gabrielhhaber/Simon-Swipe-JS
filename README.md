@@ -4,13 +4,19 @@ Versão acessível do brinquedo Simon Swipe para navegador (computador e celular
 
 ## Como rodar
 
-Os sons usam Web Audio (howler.js), que precisa de um servidor local. Abrir o `index.html` direto do disco pode falhar.
+Basta abrir o `index.html` no navegador. Também dá para rodar por um servidor local:
 
 ```bash
 node serve.js
 ```
 
 Depois abra <http://localhost:8080>. Qualquer outro servidor estático (como o Live Server do VS Code) também funciona.
+
+Os sons usam Web Audio (howler.js). Aberto direto do disco (`file://`), o navegador bloqueia o carregamento dos arquivos `.ogg` pelo Web Audio, então o jogo carrega os mesmos sons embutidos em [`js/sound-data.js`](js/sound-data.js). Esse arquivo é gerado a partir da pasta `sounds/`; depois de adicionar ou trocar um som, gere de novo:
+
+```bash
+node tools/build-sound-data.js
+```
 
 ## Controles
 
@@ -44,6 +50,10 @@ No menu, pressione L ou o botão "Aprender comandos". Faça qualquer toque ou de
 ## Modo treino
 
 Nas configurações (tecla O). O leitor de tela descreve cada sequência depois que ela toca e não há limite de tempo para responder. Partidas de treino não contam para os recordes.
+
+## Sentido dos deslizes pelo som
+
+No brinquedo, um deslize soa igual nos dois sentidos (esquerda, cima e esquerda, baixo, por exemplo), então só dá para diferenciá-los olhando. Para jogar só pelo som, o som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Os arquivos de som são os mesmos; o efeito é aplicado na hora. A opção fica nas configurações (ligada por padrão) e a intensidade em `directionCue`, no [`js/config.js`](js/config.js).
 
 ## Ajustes finos
 

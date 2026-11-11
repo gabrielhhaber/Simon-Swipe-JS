@@ -169,6 +169,20 @@
       learnPause: 1000,
     },
 
+    /*
+     * Direction cue for swipes (accessibility setting, not on the toy).
+     * The same sound file is bent along the path so that, for example,
+     * left-up and left-down no longer sound the same: each color touched
+     * moves the pitch by its height on the ring (top higher, bottom lower)
+     * and the stereo position by its side (left / right).
+     */
+    directionCue: {
+      /* Pitch of the top color; the bottom one gets the opposite. */
+      semitones: 2,
+      /* Stereo position of the left / right colors (0 center, 1 full). */
+      pan: 0.6,
+    },
+
     storageKey: 'simonSwipe.v1',
   };
 })();

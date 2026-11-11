@@ -85,6 +85,12 @@
       Storage.setSetting('allowLift', allowLift.checked);
     });
 
+    const directionCue = $('#setting-direction-cue');
+    directionCue.checked = Boolean(s.directionCue);
+    directionCue.addEventListener('change', () => {
+      Storage.setSetting('directionCue', directionCue.checked);
+    });
+
     $('#reset-levels').addEventListener('click', () => {
       Storage.level = 1;
       Game.refreshScoreboard();
