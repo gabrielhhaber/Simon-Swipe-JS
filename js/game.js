@@ -668,6 +668,20 @@
       else if (this.state === 'passing') this.confirmPass();
     },
 
+    /* Re-renders the texts this module owns after a language change. */
+    refreshLanguage() {
+      this.refreshScoreboard();
+      if (this.state === 'off') UI.setStatus(STRINGS.status.off);
+      else if (this.state === 'menu') {
+        UI.setStatus(
+          this.selectedMode ? STRINGS.status.selected(this.selectedMode) : STRINGS.status.menu
+        );
+      } else if (this.state === 'learn') {
+        UI.setStatus(STRINGS.status.learning);
+        UI.setScoreboard({ mode: 'learn' });
+      }
+    },
+
     statusSummary() {
       const parts = [];
       if (this.state === 'off') return STRINGS.status.off;
@@ -676,7 +690,7 @@
       if (mode) parts.push(STRINGS.modeNames[mode] + '.');
       if (this.mode) parts.push(STRINGS.score(this.score));
       if (mode === 'levels') parts.push(STRINGS.levelAnnounce(Storage.level, CONFIG.modes.levels.count));
-      if (mode && mode !== 'levels') parts.push('Recorde: ' + Storage.highScore(mode) + '.');
+      if (mode && mode !== 'levels') parts.push(STRINGS.bestScore(Storage.highScore(mode)));
       if (this.state === 'menu') parts.push(this.menuHintText());
       return STRINGS.statusSummary(parts);
     },

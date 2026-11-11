@@ -55,6 +55,10 @@ Nas configurações (tecla O). O leitor de tela descreve cada sequência depois 
 
 No brinquedo, um deslize soa igual nos dois sentidos (esquerda, cima e esquerda, baixo, por exemplo), então só dá para diferenciá-los olhando. Para jogar só pelo som, o som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Os toques na esquerda e na direita também saem do lado da cor. Os arquivos de som são os mesmos; o efeito é aplicado na hora. A opção fica nas configurações (ligada por padrão) e a intensidade em `directionCue`, no [`js/config.js`](js/config.js).
 
+## Idiomas
+
+O jogo está em português, inglês e espanhol: as mensagens do leitor de tela, a página, a ajuda e as configurações. Na primeira vez, o idioma é escolhido pelo idioma do sistema (o primeiro desses três na lista de idiomas do navegador; se nenhum estiver lá, inglês). Ele pode ser trocado em Configurações → Idioma. Os textos ficam em [`js/strings.js`](js/strings.js), um bloco por idioma com as mesmas chaves.
+
 ## Ajustes finos
 
 Todas as regras e tempos que imitam o brinquedo ficam em [`js/config.js`](js/config.js): posição das cores, cor de cada jogo, pontuação de vitória, níveis, intervalos entre os sons e tempo de resposta.

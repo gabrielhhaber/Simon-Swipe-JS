@@ -72,10 +72,6 @@
         group.setAttribute('class', 'segment segment--' + color);
         group.dataset.index = String(index);
         group.setAttribute('role', 'button');
-        group.setAttribute(
-          'aria-label',
-          STRINGS.colorNames[color] + ', ' + STRINGS.directionNames[key]
-        );
 
         const path = document.createElementNS(SVG_NS, 'path');
         path.setAttribute('d', arcPath(center));
@@ -93,6 +89,18 @@
 
         svg.appendChild(group);
         return group;
+      });
+      this.refreshLabels();
+    },
+
+    /* Spoken names of the ring colors, in the current language. */
+    refreshLabels() {
+      segments.forEach((group, index) => {
+        const { color, key } = CONFIG.ring[index];
+        group.setAttribute(
+          'aria-label',
+          STRINGS.colorNames[color] + ', ' + STRINGS.directionNames[key]
+        );
       });
     },
 

@@ -19,6 +19,8 @@
       allowLift: false,
       /* Bends swipe sounds so their direction can be heard. Off = toy sounds. */
       directionCue: true,
+      /* 'auto' follows the system language; otherwise 'pt', 'en' or 'es'. */
+      language: 'auto',
     },
     highScores: { classic: 0, extreme: 0, party: 0, levels: 0 },
     level: 1,

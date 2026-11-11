@@ -5,7 +5,7 @@
   'use strict';
 
   const SimonSwipe = window.SimonSwipe;
-  const { CONFIG, STRINGS, Audio, UI, Input, Announcer, Storage, Game } = SimonSwipe;
+  const { CONFIG, STRINGS, I18n, Audio, UI, Input, Announcer, Storage, Game } = SimonSwipe;
 
   const $ = (selector) => document.querySelector(selector);
 
@@ -50,6 +50,14 @@
 
     /* Settings controls */
     const s = Storage.settings;
+
+    const language = $('#setting-language');
+    language.value = I18n.SUPPORTED.includes(s.language) ? s.language : 'auto';
+    language.addEventListener('change', () => {
+      Storage.setSetting('language', language.value);
+      applyLanguage();
+      Announcer.say(STRINGS.languageChanged);
+    });
     const volume = $('#setting-volume');
     volume.value = String(Math.round(s.volume * 100));
     volume.addEventListener('input', () => {
@@ -103,16 +111,44 @@
     });
   }
 
-  function setupModeButtons() {
+  function renderModeButtons() {
     document.querySelectorAll('[data-mode]').forEach((button) => {
       const mode = button.dataset.mode;
       const index = Game.modeIndex(mode);
       const color = CONFIG.ring[index].color;
       const direction = STRINGS.directionNames[CONFIG.ring[index].key];
-      button.dataset.color = color;
       button.querySelector('.mode-button__name').textContent = STRINGS.modeNames[mode];
       button.querySelector('.mode-button__hint').textContent =
-        'Seta para ' + direction + ' · ' + STRINGS.colorNames[color];
+        STRINGS.modeButtonHint(direction, color);
+    });
+  }
+
+  /*
+   * Applies the saved language to every text: the page, the ring, the mode
+   * buttons and the game's status. The "automatic" option shows which
+   * language the system resolves to.
+   */
+  function applyLanguage() {
+    I18n.apply(Storage.settings.language);
+    const auto = $('#setting-language-auto');
+    if (auto) {
+      const detected = I18n.packFor(I18n.detect());
+      auto.textContent = STRINGS.languageAuto(detected.languageName);
+    }
+    UI.refreshLabels();
+    renderModeButtons();
+    Game.refreshLanguage();
+    const loading = $('#loading');
+    if (loading && loading.textContent && $('#power-overlay-button').disabled) {
+      loading.textContent = STRINGS.soundsLoading;
+    }
+  }
+
+  function setupModeButtons() {
+    renderModeButtons();
+    document.querySelectorAll('[data-mode]').forEach((button) => {
+      const mode = button.dataset.mode;
+      button.dataset.color = CONFIG.ring[Game.modeIndex(mode)].color;
       button.addEventListener('click', () => {
         if (Game.state === 'off') return;
         if (Game.state !== 'menu') return;
@@ -192,6 +228,7 @@
   }
 
   function boot() {
+    I18n.apply(Storage.settings.language);
     Announcer.init($('#announcer-polite'), $('#announcer-assertive'));
     UI.init({
       unit: $('#unit'),
@@ -220,6 +257,7 @@
 
     setupDialogs();
     setupModeButtons();
+    applyLanguage();
     setupLearnButton();
     setupPower();
 

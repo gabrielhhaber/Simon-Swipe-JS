@@ -20,13 +20,13 @@
   <script src="js/main.js" defer></script>
 </head>
 <body data-state="off">
-  <a class="skip-link" href="#game">Ir para o jogo</a>
+  <a class="skip-link" href="#game" data-i18n="skipLink">Ir para o jogo</a>
 
   <header class="top-bar">
-    <h1 class="title">Simon Swipe <span class="title__tag">acessível</span></h1>
-    <nav class="top-bar__actions" aria-label="Opções">
-      <button type="button" id="help-button" class="pill-button" aria-keyshortcuts="H">Ajuda <kbd>H</kbd></button>
-      <button type="button" id="settings-button" class="pill-button" aria-keyshortcuts="O">Configurações <kbd>O</kbd></button>
+    <h1 class="title">Simon Swipe <span class="title__tag" data-i18n="titleTag">acessível</span></h1>
+    <nav class="top-bar__actions" aria-label="Opções" data-i18n-attr="aria-label:optionsNav">
+      <button type="button" id="help-button" class="pill-button" aria-keyshortcuts="H" data-i18n-html="helpButton">Ajuda <kbd>H</kbd></button>
+      <button type="button" id="settings-button" class="pill-button" aria-keyshortcuts="O" data-i18n-html="settingsButton">Configurações <kbd>O</kbd></button>
     </nav>
   </header>
 
@@ -34,7 +34,8 @@
     <div id="game" class="game" role="application" tabindex="0"
          aria-roledescription="jogo"
          aria-label="Simon Swipe. Use as setas para tocar nas cores."
-         aria-describedby="game-instructions">
+         aria-describedby="game-instructions"
+         data-i18n-attr="aria-roledescription:gameRole, aria-label:gameLabel">
       <div id="unit" class="unit is-off">
         <svg id="ring" class="ring" viewBox="-100 -100 200 200" focusable="false">
           <circle class="ring__track" r="99"></circle>
@@ -43,7 +44,8 @@
           <span class="hub__logo" aria-hidden="true">SIMON</span>
           <span class="hub__sub" aria-hidden="true">swipe</span>
           <button type="button" id="power-button" class="hub__power"
-                  aria-label="Ligar ou desligar" aria-keyshortcuts="P">
+                  aria-label="Ligar ou desligar" aria-keyshortcuts="P"
+                  data-i18n-attr="aria-label:powerButton">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path d="M12 3v8" />
               <path d="M6.3 6.8a8 8 0 1 0 11.4 0" />
@@ -53,18 +55,18 @@
       </div>
     </div>
 
-    <section class="panel" aria-label="Painel do jogo">
+    <section class="panel" aria-label="Painel do jogo" data-i18n-attr="aria-label:panel">
       <p id="status" class="status" aria-hidden="true">Desligado</p>
 
-      <dl class="scoreboard" aria-label="Placar">
-        <div class="scoreboard__item"><dt>Jogo</dt><dd id="score-mode">—</dd></div>
-        <div class="scoreboard__item"><dt>Pontos</dt><dd id="score-points">—</dd></div>
-        <div class="scoreboard__item"><dt>Recorde</dt><dd id="score-best">—</dd></div>
-        <div class="scoreboard__item"><dt>Nível</dt><dd id="score-level">—</dd></div>
+      <dl class="scoreboard" aria-label="Placar" data-i18n-attr="aria-label:scoreboard">
+        <div class="scoreboard__item"><dt data-i18n="scoreGame">Jogo</dt><dd id="score-mode">—</dd></div>
+        <div class="scoreboard__item"><dt data-i18n="scorePoints">Pontos</dt><dd id="score-points">—</dd></div>
+        <div class="scoreboard__item"><dt data-i18n="scoreBest">Recorde</dt><dd id="score-best">—</dd></div>
+        <div class="scoreboard__item"><dt data-i18n="scoreLevel">Nível</dt><dd id="score-level">—</dd></div>
       </dl>
 
       <div class="modes" role="group" aria-labelledby="modes-title">
-        <h2 id="modes-title" class="panel__title">Jogos</h2>
+        <h2 id="modes-title" class="panel__title" data-i18n="modesTitle">Jogos</h2>
         <button type="button" class="mode-button" data-mode="classic" aria-pressed="false">
           <span class="mode-button__name"></span><span class="mode-button__hint"></span>
         </button>
@@ -79,12 +81,12 @@
         </button>
         <button type="button" id="learn-button" class="mode-button mode-button--learn"
                 aria-pressed="false" aria-keyshortcuts="L" aria-describedby="learn-button-hint">
-          <span class="mode-button__name">Aprender comandos</span>
-          <span id="learn-button-hint" class="mode-button__hint">Tecla L · faça qualquer jogada e ouça o som dela</span>
+          <span class="mode-button__name" data-i18n="learnName">Aprender comandos</span>
+          <span id="learn-button-hint" class="mode-button__hint" data-i18n="learnHint">Tecla L · faça qualquer jogada e ouça o som dela</span>
         </button>
       </div>
 
-      <div id="game-instructions" class="visually-hidden">
+      <div id="game-instructions" class="visually-hidden" data-i18n="gameInstructions">
         Cada seta é uma cor do anel: cima verde, direita vermelho, baixo azul, esquerda amarelo.
         Toque: pressione a seta da cor. Deslize: segure a seta da cor inicial e pressione as próximas em ordem, sem soltar todas as teclas antes de terminar.
         Retorno: vá até o fim do caminho e volte pelas mesmas setas até a cor inicial.
@@ -96,16 +98,17 @@
   <div id="power-overlay" class="power-overlay">
     <div class="power-overlay__card">
       <p class="power-overlay__title">Simon Swipe</p>
-      <button type="button" id="power-overlay-button" class="power-overlay__button">
+      <button type="button" id="power-overlay-button" class="power-overlay__button" data-i18n="powerOverlayButton">
         Ligar o Simon Swipe
       </button>
       <p id="loading" class="power-overlay__loading" role="status"></p>
-      <p class="power-overlay__hint">Use as setas, o mouse ou o toque. Pressione H para ajuda.</p>
+      <p class="power-overlay__hint" data-i18n="powerOverlayHint">Use as setas, o mouse ou o toque. Pressione H para ajuda.</p>
     </div>
   </div>
 
   <dialog id="help-dialog" class="dialog" aria-labelledby="help-title">
     <div class="dialog__body">
+      <div data-i18n-html="helpContent">
       <h2 id="help-title">Como jogar</h2>
 
       <h3>O anel</h3>
@@ -162,62 +165,73 @@
 
       <h3>Créditos</h3>
       <p>Sons da EG Public Library, de zseli22, publicada originalmente em keybase.pub/zseli22/EG_Public_library (o keybase.pub não existe mais). Simon e Simon Swipe são marcas da Hasbro; este é um projeto de fãs sem relação com a Hasbro.</p>
+      </div>
 
-      <button type="button" class="pill-button pill-button--primary" data-close-dialog>Fechar</button>
+      <button type="button" class="pill-button pill-button--primary" data-close-dialog data-i18n="close">Fechar</button>
     </div>
   </dialog>
 
   <dialog id="settings-dialog" class="dialog" aria-labelledby="settings-title">
     <form class="dialog__body" method="dialog">
-      <h2 id="settings-title">Configurações</h2>
+      <h2 id="settings-title" data-i18n="settingsTitle">Configurações</h2>
 
       <div class="field">
-        <label for="setting-volume">Volume</label>
+        <label for="setting-language" data-i18n="language">Idioma</label>
+        <select id="setting-language">
+          <option value="auto" id="setting-language-auto">Automático, idioma do sistema</option>
+          <option value="pt" lang="pt-BR">Português</option>
+          <option value="en" lang="en">English</option>
+          <option value="es" lang="es">Español</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="setting-volume" data-i18n="volume">Volume</label>
         <input type="range" id="setting-volume" min="0" max="100" step="10">
       </div>
 
       <div class="field">
-        <label for="setting-timeout">Tempo para cada jogada (ignorado no modo treino)</label>
+        <label for="setting-timeout" data-i18n="timeout">Tempo para cada jogada (ignorado no modo treino)</label>
         <select id="setting-timeout">
-          <option value="5000">5 segundos (como o brinquedo)</option>
-          <option value="10000">10 segundos</option>
-          <option value="20000">20 segundos</option>
-          <option value="0">Sem limite</option>
+          <option value="5000" data-i18n="timeout5">5 segundos (como o brinquedo)</option>
+          <option value="10000" data-i18n="timeout10">10 segundos</option>
+          <option value="20000" data-i18n="timeout20">20 segundos</option>
+          <option value="0" data-i18n="timeoutNone">Sem limite</option>
         </select>
       </div>
 
       <div class="field field--check">
         <input type="checkbox" id="setting-allow-lift" aria-describedby="setting-allow-lift-hint">
-        <label for="setting-allow-lift">Permitir soltar a tecla ou levantar o dedo no meio de um deslize
-          <span id="setting-allow-lift-hint" class="field__hint">Para quem tem dificuldade motora. Desligado, soltar antes de terminar conta como erro, como no brinquedo.</span>
+        <label for="setting-allow-lift"><span data-i18n="allowLift">Permitir soltar a tecla ou levantar o dedo no meio de um deslize</span>
+          <span id="setting-allow-lift-hint" class="field__hint" data-i18n="allowLiftHint">Para quem tem dificuldade motora. Desligado, soltar antes de terminar conta como erro, como no brinquedo.</span>
         </label>
       </div>
 
       <div class="field field--check">
         <input type="checkbox" id="setting-direction-cue" aria-describedby="setting-direction-cue-hint">
-        <label for="setting-direction-cue">Indicar o sentido dos deslizes pelo som
-          <span id="setting-direction-cue-hint" class="field__hint">O som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Assim deslizes como esquerda, cima e esquerda, baixo soam diferentes. Os toques na esquerda e na direita também saem do lado da cor. Desligado, os sons são iguais aos do brinquedo.</span>
+        <label for="setting-direction-cue"><span data-i18n="directionCue">Indicar o sentido dos deslizes pelo som</span>
+          <span id="setting-direction-cue-hint" class="field__hint" data-i18n="directionCueHint">O som do deslize acompanha o caminho no anel: fica mais agudo ao passar pela cor de cima, mais grave pela de baixo, e vai para o lado esquerdo ou direito do fone. Assim deslizes como esquerda, cima e esquerda, baixo soam diferentes. Os toques na esquerda e na direita também saem do lado da cor. Desligado, os sons são iguais aos do brinquedo.</span>
         </label>
       </div>
 
       <div class="field field--check">
         <input type="checkbox" id="setting-announce-turn">
-        <label for="setting-announce-turn">Avisar “Sua vez” no leitor de tela</label>
+        <label for="setting-announce-turn" data-i18n="announceTurn">Avisar “Sua vez” no leitor de tela</label>
       </div>
 
       <div class="field field--check">
         <input type="checkbox" id="setting-training" aria-describedby="setting-training-hint">
-        <label for="setting-training">Modo treino
-          <span id="setting-training-hint" class="field__hint">O leitor de tela descreve cada sequência depois que ela toca, e não há limite de tempo para responder. Partidas de treino não contam para os recordes.</span>
+        <label for="setting-training"><span data-i18n="training">Modo treino</span>
+          <span id="setting-training-hint" class="field__hint" data-i18n="trainingHint">O leitor de tela descreve cada sequência depois que ela toca, e não há limite de tempo para responder. Partidas de treino não contam para os recordes.</span>
         </label>
       </div>
 
       <div class="field field--buttons">
-        <button type="button" id="reset-levels" class="pill-button">Reiniciar níveis</button>
-        <button type="button" id="reset-records" class="pill-button">Apagar recordes</button>
+        <button type="button" id="reset-levels" class="pill-button" data-i18n="resetLevels">Reiniciar níveis</button>
+        <button type="button" id="reset-records" class="pill-button" data-i18n="resetRecords">Apagar recordes</button>
       </div>
 
-      <button type="submit" class="pill-button pill-button--primary">Fechar</button>
+      <button type="submit" class="pill-button pill-button--primary" data-i18n="close">Fechar</button>
     </form>
   </dialog>
 
